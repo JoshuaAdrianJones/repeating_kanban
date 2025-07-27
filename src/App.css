@@ -1,0 +1,202 @@
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+.kanban-board {
+  width: 100%;
+}
+
+.kanban-board h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.columns {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: space-between;
+}
+
+.column {
+  flex: 1;
+  background: #ffffff;
+  border: 2px solid #e8f4f8;
+  border-radius: 12px;
+  padding: 1.5rem;
+  min-height: 500px;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e8f4f8;
+}
+
+.column-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.add-task-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.add-task-btn:hover {
+  background: #2980b9;
+}
+
+.column-content {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.task-card {
+  background: #ffffff;
+  border: 2px solid #ecf0f1;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: grab;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  color: #2c3e50;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.task-card:hover {
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+  transform: translateY(-2px);
+  border-color: #3498db;
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(44, 62, 80, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 8px 32px rgba(52, 152, 219, 0.2);
+  border: 2px solid #e8f4f8;
+}
+
+.modal h3 {
+  margin: 0 0 1.5rem 0;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.modal input {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #ecf0f1;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+  color: #2c3e50;
+  background: #ffffff;
+}
+
+.modal input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.modal-buttons button {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.modal-buttons button[type="submit"] {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+.modal-buttons button[type="submit"]:hover:not(:disabled) {
+  background: #2980b9;
+  border-color: #2980b9;
+}
+
+.modal-buttons button[type="submit"]:disabled {
+  background: #bdc3c7;
+  border-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.modal-buttons button[type="button"] {
+  background: #ffffff;
+  color: #2c3e50;
+  border-color: #ecf0f1;
+}
+
+.modal-buttons button[type="button"]:hover {
+  background: #f8f9fa;
+  border-color: #bdc3c7;
+}
+
+@media (max-width: 768px) {
+  .columns {
+    flex-direction: column;
+  }
+  
+  .app {
+    padding: 1rem;
+  }
+}

@@ -8,7 +8,7 @@ describe('TaskCard Styling', () => {
     
     const taskContent = screen.getByText('Baseline task')
     const taskCard = taskContent.closest('.task-card')
-    const badge = screen.getByText('regular')
+    const badge = screen.getByText('Routine')
     
     expect(taskCard).toHaveClass('task-card--baseline')
     expect(badge).toHaveClass('task-card__badge')
@@ -45,6 +45,6 @@ describe('TaskCard Styling', () => {
     expect(content).toBeInTheDocument()
     expect(badge).toBeInTheDocument()
     expect(content).toHaveTextContent('Test content')
-    expect(badge).toHaveTextContent('regular')
+    expect(badge).toHaveTextContent('Routine')
   })
 })

@@ -127,7 +127,7 @@
 }
 
 .task-card--baseline {
-  border-color: #27ae60;
+  border-color: #9fa140;
   background: #f8fffe;
 }
 
@@ -141,7 +141,7 @@
 }
 
 .task-card__badge {
-  background: #27ae60;
+  background: #9fa140;
   color: white;
   font-size: 0.7rem;
   font-weight: 600;
@@ -158,7 +158,7 @@
 }
 
 .task-card--baseline:hover {
-  border-color: #219a52;
+  border-color: #9fa140;
   box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
 }
 

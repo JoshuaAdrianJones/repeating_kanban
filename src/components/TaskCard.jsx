@@ -32,7 +32,7 @@ const TaskCard = ({ id, content, isBaseline = false }) => {
       </div>
       {isBaseline && (
         <div className="task-card__badge">
-          regular
+          Routine
         </div>
       )}
     </div>

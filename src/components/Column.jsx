@@ -32,6 +32,7 @@ const Column = ({ id, title, tasks, onAddTask }) => {
               key={task.id}
               id={task.id}
               content={task.content}
+              isBaseline={task.isBaseline}
             />
           ))}
         </SortableContext>

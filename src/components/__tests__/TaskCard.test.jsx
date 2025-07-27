@@ -26,8 +26,10 @@ describe('TaskCard', () => {
     const taskContent = 'Test task'
     render(<TaskCard id="test-1" content={taskContent} />)
     
-    const taskElement = screen.getByText(taskContent)
-    expect(taskElement).toHaveClass('task-card')
+    const taskContentElement = screen.getByText(taskContent)
+    const taskCardElement = taskContentElement.closest('.task-card')
+    expect(taskCardElement).toHaveClass('task-card')
+    expect(taskContentElement).toHaveClass('task-card__content')
   })
 
   it('renders multiple task cards with different content', () => {

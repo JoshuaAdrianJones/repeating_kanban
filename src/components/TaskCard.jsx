@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-const TaskCard = ({ id, content }) => {
+const TaskCard = ({ id, content, isBaseline = false }) => {
   const {
     attributes,
     listeners,
@@ -17,15 +17,24 @@ const TaskCard = ({ id, content }) => {
     opacity: isDragging ? 0.5 : 1,
   };
 
+  const cardClass = `task-card ${isBaseline ? 'task-card--baseline' : 'task-card--custom'}`;
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
-      className="task-card"
+      className={cardClass}
     >
-      {content}
+      <div className="task-card__content">
+        {content}
+      </div>
+      {isBaseline && (
+        <div className="task-card__badge">
+          regular
+        </div>
+      )}
     </div>
   );
 };

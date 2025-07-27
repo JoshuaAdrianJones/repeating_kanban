@@ -5,12 +5,15 @@ import KanbanBoard from '../KanbanBoard'
 // Mock the tasks.json file
 vi.mock('../../data/tasks.json', () => ({
   default: {
-    baseline: ['Check emails', 'Review calendar', 'Team standup', 'Process inbox'],
-    monday: ['Weekly planning', 'Review metrics', 'Team sync'],
-    tuesday: ['Client calls', 'Project reviews'],
-    wednesday: ['Deep work block', 'Architecture review'],
-    thursday: ['1:1 meetings', 'Code reviews'],
-    friday: ['Week wrap-up', 'Documentation updates', 'Planning next week']
+    daily: {
+      baseline: ['Check emails', 'Review calendar', 'Team standup', 'Process inbox'],
+      monday: ['Weekly planning', 'Review metrics', 'Team sync'],
+      tuesday: ['Client calls', 'Project reviews'],
+      wednesday: ['Deep work block', 'Architecture review'],
+      thursday: ['1:1 meetings', 'Code reviews'],
+      friday: ['Week wrap-up', 'Documentation updates', 'Planning next week']
+    },
+    weekly: ['Sprint planning & retrospective', 'Monthly goals review', 'Team building activity']
   }
 }))
 

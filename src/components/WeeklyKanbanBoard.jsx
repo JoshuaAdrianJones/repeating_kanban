@@ -19,7 +19,7 @@ import TaskCard from './TaskCard';
 import AddTaskModal from './AddTaskModal';
 import tasksData from '../data/tasks.json';
 
-const KanbanBoard = () => {
+const WeeklyKanbanBoard = () => {
   const [tasks, setTasks] = useState({
     todo: [],
     doing: [],
@@ -36,29 +36,32 @@ const KanbanBoard = () => {
     })
   );
 
-  const getDayOfWeek = () => {
-    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    return days[new Date().getDay()];
+  const getWeekNumber = (date = new Date()) => {
+    const startOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date - startOfYear) / 86400000;
+    return Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
   };
 
-  const loadTodaysTasks = () => {
-    const today = getDayOfWeek();
-    const baselineTasks = tasksData.daily?.baseline || [];
-    const daySpecificTasks = tasksData.daily?.[today] || [];
+  const getWeekDateRange = () => {
+    const now = new Date();
+    const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+    const endOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 6));
     
-    const baselineTaskObjects = baselineTasks.map((task, index) => ({
-      id: `daily-baseline-${index}`,
+    const formatDate = (date) => {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    };
+
+    return `${formatDate(startOfWeek)} - ${formatDate(endOfWeek)}`;
+  };
+
+  const loadWeeklyTasks = () => {
+    const weeklyTasksList = tasksData.weekly || [];
+    
+    const allTasks = weeklyTasksList.map((task, index) => ({
+      id: `weekly-baseline-${index}`,
       content: task,
       isBaseline: true
     }));
-
-    const daySpecificTaskObjects = daySpecificTasks.map((task, index) => ({
-      id: `daily-specific-${index}`,
-      content: task,
-      isBaseline: true
-    }));
-
-    const allTasks = [...baselineTaskObjects, ...daySpecificTaskObjects];
 
     setTasks({
       todo: allTasks,
@@ -67,26 +70,30 @@ const KanbanBoard = () => {
     });
   };
 
-  const checkForNewDay = () => {
-    const lastResetDate = localStorage.getItem('lastResetDate');
-    const today = new Date().toDateString();
+  const checkForNewWeek = () => {
+    const lastWeekReset = localStorage.getItem('lastWeekReset');
+    const currentWeek = getWeekNumber();
     
-    if (lastResetDate !== today || !lastResetDate) {
-      loadTodaysTasks();
-      localStorage.setItem('lastResetDate', today);
+    if (lastWeekReset !== currentWeek.toString()) {
+      loadWeeklyTasks();
+      localStorage.setItem('lastWeekReset', currentWeek.toString());
     }
   };
 
   useEffect(() => {
-    loadTodaysTasks(); // Load tasks immediately on mount
-    checkForNewDay();
-    const interval = setInterval(checkForNewDay, 60000); // Check every minute
+    loadWeeklyTasks(); // Load tasks immediately on mount
+    checkForNewWeek();
+    // Check for new week once per day
+    const interval = setInterval(checkForNewWeek, 24 * 60 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
   const findContainer = (id) => {
-    if (id in tasks) {
-      return id;
+    // Handle prefixed column IDs (e.g., "weekly-todo" -> "todo")
+    const cleanId = id.startsWith('weekly-') ? id.replace('weekly-', '') : id;
+    
+    if (cleanId in tasks) {
+      return cleanId;
     }
 
     return Object.keys(tasks).find((key) =>
@@ -119,7 +126,8 @@ const KanbanBoard = () => {
       const overIndex = overItems.findIndex((item) => item.id === over.id);
 
       let newIndex;
-      if (over.id in prev) {
+      const cleanOverId = over.id.startsWith('weekly-') ? over.id.replace('weekly-', '') : over.id;
+      if (cleanOverId in prev) {
         newIndex = overItems.length;
       } else {
         const isBelowLastItem = over.data.current?.sortable?.index > overIndex;
@@ -169,7 +177,7 @@ const KanbanBoard = () => {
 
   const addCustomTask = (content, column) => {
     const newTask = {
-      id: `daily-custom-${Date.now()}`,
+      id: `weekly-custom-${Date.now()}`,
       content,
       isBaseline: false
     };
@@ -186,8 +194,8 @@ const KanbanBoard = () => {
   };
 
   return (
-    <div className="kanban-board">
-      <h1>Daily Kanban - {getDayOfWeek().charAt(0).toUpperCase() + getDayOfWeek().slice(1)}</h1>
+    <div className="weekly-kanban-board">
+      <h2>Weekly Goals - {getWeekDateRange()}</h2>
       
       <DndContext
         sensors={sensors}
@@ -196,11 +204,11 @@ const KanbanBoard = () => {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="columns">
+        <div className="columns weekly-columns">
           {Object.keys(tasks).map((columnId) => (
             <Column
               key={columnId}
-              id={columnId}
+              id={`weekly-${columnId}`}
               title={columnId.charAt(0).toUpperCase() + columnId.slice(1)}
               tasks={tasks[columnId]}
               onAddTask={() => openModal(columnId)}
@@ -241,4 +249,4 @@ const KanbanBoard = () => {
   );
 };
 
-export default KanbanBoard;
+export default WeeklyKanbanBoard;

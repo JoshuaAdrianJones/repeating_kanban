@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -12,7 +12,6 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import Column from './Column';
 import TaskCard from './TaskCard';
@@ -23,7 +22,7 @@ const WeeklyKanbanBoard = () => {
   const [tasks, setTasks] = useState({
     todo: [],
     doing: [],
-    done: []
+    done: [],
   });
   const [activeId, setActiveId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -46,9 +45,12 @@ const WeeklyKanbanBoard = () => {
     const now = new Date();
     const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
     const endOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 6));
-    
+
     const formatDate = (date) => {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
     };
 
     return `${formatDate(startOfWeek)} - ${formatDate(endOfWeek)}`;
@@ -56,29 +58,29 @@ const WeeklyKanbanBoard = () => {
 
   const loadWeeklyTasks = () => {
     const weeklyTasksList = tasksData.weekly || [];
-    
+
     const allTasks = weeklyTasksList.map((task, index) => ({
       id: `weekly-baseline-${index}`,
       content: task,
-      isBaseline: true
+      isBaseline: true,
     }));
 
     setTasks({
       todo: allTasks,
       doing: [],
-      done: []
+      done: [],
     });
   };
 
-  const checkForNewWeek = () => {
+  const checkForNewWeek = useCallback(() => {
     const lastWeekReset = localStorage.getItem('lastWeekReset');
     const currentWeek = getWeekNumber();
-    
+
     if (lastWeekReset !== currentWeek.toString()) {
       loadWeeklyTasks();
       localStorage.setItem('lastWeekReset', currentWeek.toString());
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadWeeklyTasks(); // Load tasks immediately on mount
@@ -86,12 +88,12 @@ const WeeklyKanbanBoard = () => {
     // Check for new week once per day
     const interval = setInterval(checkForNewWeek, 24 * 60 * 60 * 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [checkForNewWeek]);
 
   const findContainer = (id) => {
     // Handle prefixed column IDs (e.g., "weekly-todo" -> "todo")
     const cleanId = id.startsWith('weekly-') ? id.replace('weekly-', '') : id;
-    
+
     if (cleanId in tasks) {
       return cleanId;
     }
@@ -114,7 +116,11 @@ const WeeklyKanbanBoard = () => {
     const activeContainer = findContainer(active.id);
     const overContainer = findContainer(over.id);
 
-    if (!activeContainer || !overContainer || activeContainer === overContainer) {
+    if (
+      !activeContainer ||
+      !overContainer ||
+      activeContainer === overContainer
+    ) {
       return;
     }
 
@@ -122,11 +128,15 @@ const WeeklyKanbanBoard = () => {
       const activeItems = prev[activeContainer];
       const overItems = prev[overContainer];
 
-      const activeIndex = activeItems.findIndex((item) => item.id === active.id);
+      const activeIndex = activeItems.findIndex(
+        (item) => item.id === active.id
+      );
       const overIndex = overItems.findIndex((item) => item.id === over.id);
 
       let newIndex;
-      const cleanOverId = over.id.startsWith('weekly-') ? over.id.replace('weekly-', '') : over.id;
+      const cleanOverId = over.id.startsWith('weekly-')
+        ? over.id.replace('weekly-', '')
+        : over.id;
       if (cleanOverId in prev) {
         newIndex = overItems.length;
       } else {
@@ -162,8 +172,12 @@ const WeeklyKanbanBoard = () => {
       return;
     }
 
-    const activeIndex = tasks[activeContainer].findIndex((item) => item.id === active.id);
-    const overIndex = tasks[overContainer].findIndex((item) => item.id === over.id);
+    const activeIndex = tasks[activeContainer].findIndex(
+      (item) => item.id === active.id
+    );
+    const overIndex = tasks[overContainer].findIndex(
+      (item) => item.id === over.id
+    );
 
     if (activeContainer === overContainer) {
       setTasks((prev) => ({
@@ -179,12 +193,12 @@ const WeeklyKanbanBoard = () => {
     const newTask = {
       id: `weekly-custom-${Date.now()}`,
       content,
-      isBaseline: false
+      isBaseline: false,
     };
 
-    setTasks(prev => ({
+    setTasks((prev) => ({
       ...prev,
-      [column]: [...prev[column], newTask]
+      [column]: [...prev[column], newTask],
     }));
   };
 
@@ -196,7 +210,7 @@ const WeeklyKanbanBoard = () => {
   return (
     <div className="weekly-kanban-board">
       <h2>Weekly Goals - {getWeekDateRange()}</h2>
-      
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}

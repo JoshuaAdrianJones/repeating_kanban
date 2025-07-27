@@ -17,16 +17,59 @@ A React-based dual kanban board application for managing both daily tasks and we
 ## Setup
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Start development server:
+
    ```bash
    npm run dev
    ```
 
 3. Open http://localhost:5173 in your browser
+
+## Development
+
+### Linting & Formatting
+
+```bash
+# Run ESLint to check code quality
+npm run lint
+
+# Fix ESLint issues automatically
+npm run lint:fix
+
+# Format code with Prettier
+npm run format
+
+# Check if code is formatted correctly
+npm run format:check
+```
+
+### Testing
+
+```bash
+# Run tests once
+npm run test:run
+
+# Run tests in watch mode
+npm test
+
+# Run tests with UI
+npm run test:ui
+```
+
+### Build
+
+```bash
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
 
 ## Customizing Tasks
 
@@ -54,16 +97,19 @@ Edit `src/data/tasks.json` to customize both daily and weekly tasks:
 ## How It Works
 
 ### Daily Board
+
 - Tasks are loaded based on the current day of the week
 - Automatically resets at midnight for a fresh start each day
 - Combines baseline tasks (appear every day) + day-specific tasks
 
 ### Weekly Board
+
 - Tasks load at the beginning of each week
 - Automatically resets each Monday for new weekly goals
 - Persists throughout the week to track longer-term objectives
 
 ### Interaction
+
 - Drag and drop tasks between columns on both boards
 - Add custom tasks using the + button in any column
 - Both boards fit in one viewport for complete task overview

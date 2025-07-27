@@ -1,6 +1,6 @@
-import KanbanBoard from './components/KanbanBoard'
-import WeeklyKanbanBoard from './components/WeeklyKanbanBoard'
-import './App.css'
+import KanbanBoard from './components/KanbanBoard';
+import WeeklyKanbanBoard from './components/WeeklyKanbanBoard';
+import './App.css';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         <WeeklyKanbanBoard />
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

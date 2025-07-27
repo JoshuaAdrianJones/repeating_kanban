@@ -6,28 +6,11 @@
       "Team standup",
       "Process inbox"
     ],
-    "monday": [
-      "Weekly planning",
-      "Review metrics",
-      "Team sync"
-    ],
-    "tuesday": [
-      "Client calls",
-      "Project reviews"
-    ],
-    "wednesday": [
-      "Deep work block",
-      "Architecture review"
-    ],
-    "thursday": [
-      "1:1 meetings",
-      "Code reviews"
-    ],
-    "friday": [
-      "Week wrap-up",
-      "Documentation updates",
-      "Planning next week"
-    ]
+    "monday": ["Weekly planning", "Review metrics", "Team sync"],
+    "tuesday": ["Client calls", "Project reviews"],
+    "wednesday": ["Deep work block", "Architecture review"],
+    "thursday": ["1:1 meetings", "Code reviews"],
+    "friday": ["Week wrap-up", "Documentation updates", "Planning next week"]
   },
   "weekly": [
     "Sprint planning & retrospective",

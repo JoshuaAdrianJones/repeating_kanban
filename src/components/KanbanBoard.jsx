@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -12,7 +12,6 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import Column from './Column';
 import TaskCard from './TaskCard';
@@ -23,7 +22,7 @@ const KanbanBoard = () => {
   const [tasks, setTasks] = useState({
     todo: [],
     doing: [],
-    done: []
+    done: [],
   });
   const [activeId, setActiveId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -37,25 +36,33 @@ const KanbanBoard = () => {
   );
 
   const getDayOfWeek = () => {
-    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const days = [
+      'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+    ];
     return days[new Date().getDay()];
   };
 
-  const loadTodaysTasks = () => {
+  const loadTodaysTasks = useCallback(() => {
     const today = getDayOfWeek();
     const baselineTasks = tasksData.daily?.baseline || [];
     const daySpecificTasks = tasksData.daily?.[today] || [];
-    
+
     const baselineTaskObjects = baselineTasks.map((task, index) => ({
       id: `daily-baseline-${index}`,
       content: task,
-      isBaseline: true
+      isBaseline: true,
     }));
 
     const daySpecificTaskObjects = daySpecificTasks.map((task, index) => ({
       id: `daily-specific-${index}`,
       content: task,
-      isBaseline: true
+      isBaseline: true,
     }));
 
     const allTasks = [...baselineTaskObjects, ...daySpecificTaskObjects];
@@ -63,26 +70,26 @@ const KanbanBoard = () => {
     setTasks({
       todo: allTasks,
       doing: [],
-      done: []
+      done: [],
     });
-  };
+  }, []);
 
-  const checkForNewDay = () => {
+  const checkForNewDay = useCallback(() => {
     const lastResetDate = localStorage.getItem('lastResetDate');
     const today = new Date().toDateString();
-    
+
     if (lastResetDate !== today || !lastResetDate) {
       loadTodaysTasks();
       localStorage.setItem('lastResetDate', today);
     }
-  };
+  }, [loadTodaysTasks]);
 
   useEffect(() => {
     loadTodaysTasks(); // Load tasks immediately on mount
     checkForNewDay();
     const interval = setInterval(checkForNewDay, 60000); // Check every minute
     return () => clearInterval(interval);
-  }, []);
+  }, [checkForNewDay, loadTodaysTasks]);
 
   const findContainer = (id) => {
     if (id in tasks) {
@@ -107,7 +114,11 @@ const KanbanBoard = () => {
     const activeContainer = findContainer(active.id);
     const overContainer = findContainer(over.id);
 
-    if (!activeContainer || !overContainer || activeContainer === overContainer) {
+    if (
+      !activeContainer ||
+      !overContainer ||
+      activeContainer === overContainer
+    ) {
       return;
     }
 
@@ -115,7 +126,9 @@ const KanbanBoard = () => {
       const activeItems = prev[activeContainer];
       const overItems = prev[overContainer];
 
-      const activeIndex = activeItems.findIndex((item) => item.id === active.id);
+      const activeIndex = activeItems.findIndex(
+        (item) => item.id === active.id
+      );
       const overIndex = overItems.findIndex((item) => item.id === over.id);
 
       let newIndex;
@@ -154,8 +167,12 @@ const KanbanBoard = () => {
       return;
     }
 
-    const activeIndex = tasks[activeContainer].findIndex((item) => item.id === active.id);
-    const overIndex = tasks[overContainer].findIndex((item) => item.id === over.id);
+    const activeIndex = tasks[activeContainer].findIndex(
+      (item) => item.id === active.id
+    );
+    const overIndex = tasks[overContainer].findIndex(
+      (item) => item.id === over.id
+    );
 
     if (activeContainer === overContainer) {
       setTasks((prev) => ({
@@ -171,12 +188,12 @@ const KanbanBoard = () => {
     const newTask = {
       id: `daily-custom-${Date.now()}`,
       content,
-      isBaseline: false
+      isBaseline: false,
     };
 
-    setTasks(prev => ({
+    setTasks((prev) => ({
       ...prev,
-      [column]: [...prev[column], newTask]
+      [column]: [...prev[column], newTask],
     }));
   };
 
@@ -187,8 +204,11 @@ const KanbanBoard = () => {
 
   return (
     <div className="kanban-board">
-      <h1>Daily Kanban - {getDayOfWeek().charAt(0).toUpperCase() + getDayOfWeek().slice(1)}</h1>
-      
+      <h1>
+        Daily Kanban -{' '}
+        {getDayOfWeek().charAt(0).toUpperCase() + getDayOfWeek().slice(1)}
+      </h1>
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}

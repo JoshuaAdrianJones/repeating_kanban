@@ -27,14 +27,8 @@ const TaskCard = ({ id, content, isBaseline = false }) => {
       {...listeners}
       className={cardClass}
     >
-      <div className="task-card__content">
-        {content}
-      </div>
-      {isBaseline && (
-        <div className="task-card__badge">
-          Routine
-        </div>
-      )}
+      <div className="task-card__content">{content}</div>
+      {isBaseline && <div className="task-card__badge">Routine</div>}
     </div>
   );
 };

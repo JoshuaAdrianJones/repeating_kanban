@@ -18,13 +18,10 @@ const Column = ({ id, title, tasks, onAddTask }) => {
           +
         </button>
       </div>
-      
-      <div
-        ref={setNodeRef}
-        className="column-content"
-      >
+
+      <div ref={setNodeRef} className="column-content">
         <SortableContext
-          items={tasks.map(task => task.id)}
+          items={tasks.map((task) => task.id)}
           strategy={verticalListSortingStrategy}
         >
           {tasks.map((task) => (
